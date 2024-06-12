@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from minio import Minio
 
 
-client = Minio("localhost:9000", access_key="WXGJn6Wg7G5iLvkpHr4N", secret_key="m41C12gRTuQ3QopR2tApv69qNAi8KJegbSLIHcKC", secure=False)
+client = Minio("localhost:9000", access_key="minio_user", secret_key="minio_password", secure=False)
 
 
 class Repository(ABC):
@@ -59,13 +59,11 @@ class FileRepository(Repository, Generic[ModelType, CreateSchemaType, UpdateSche
 
     async def create(self, bucket_name: str, object_name: str, file_path: str):
 
-        bucket_name1 = "python-test-bucket"
-
-        found = client.bucket_exists(bucket_name1)
+        found = client.bucket_exists(bucket_name)
         if not found:
-            client.make_bucket(bucket_name1)
+            client.make_bucket(bucket_name)
 
-        self._client.fput_object(bucket_name=bucket_name1,
+        self._client.fput_object(bucket_name=bucket_name,
                                  object_name=object_name,
                                  file_path=file_path)
         return True
